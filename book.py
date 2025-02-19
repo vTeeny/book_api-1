@@ -1,13 +1,17 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS, cross_origin
 
 # Sample data (in-memory database for simplicity)
 books = [
-    {"id": 1, "title": "Book 1", "author": "Author 1"},
-    {"id": 2, "title": "Book 2", "author": "Author 2"},
-    {"id": 3, "title": "Book 3", "author": "Author 3"}
+    {"id": 1, "title": "The Let Them Theory: A Life-Changing Tool That Millions of People Can't Stop Talking About", "author": "Mel Robbins", "image_url": "https://images-na.ssl-images-amazon.com/images/I/91I1KDnK1kL._AC_UL381_SR381,381_.jpg"},
+    {"id": 2, "title": "Forgotten Home Apothecary : 250 Powerful Remedies at Your Fingertips", "author": "Dr. Nicole Apelian", "image_url": "https://images-na.ssl-images-amazon.com/images/I/91-E86oM2IL._AC_UL381_SR381,381_.jpg"},
+    {"id": 3, "title": "Seven Things You Can't Say About China", "author": "Tom Cotton", "image_url": "https://images-na.ssl-images-amazon.com/images/I/81+mN748qkL._AC_UL381_SR381,381_.jpg"},
+    {"id": 4, "title": "Atomic Habits: An Easy & Proven Way to Build Good Habits & Break Bad Ones", "author" : "James Clear", "image_url": "https://images-na.ssl-images-amazon.com/images/I/81ANaVZk5LL._AC_UL381_SR381,381_.jpg"}
 ]
 
 app = Flask(__name__)
+CORS(app)
+app.config['CORS_HEADERS']='Content-Type'
 
 @app.route("/")
 def hello_world():
@@ -21,7 +25,8 @@ def create_book():
     new_book = {
         "id": len(books) + 1,
         "title": data["title"],
-        "author": data["author"]
+        "author": data["author"],
+        "image_url": data["image_url"]
     }
 
     books.append(new_book)
@@ -29,6 +34,7 @@ def create_book():
 
 # Read (GET) operation - Get all books
 @app.route('/books', methods=['GET'])
+@cross_origin()
 def get_all_books():
     return jsonify({"books": books})
 
